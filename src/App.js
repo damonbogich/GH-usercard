@@ -1,7 +1,10 @@
 import './App.css';
 import React, { Component } from "react";
-import UserCard from './Components/UserCard';
 import axios from 'axios';
+
+import UserCard from './Components/UserCard';
+import FollowerCards from './Components/FollowerCards';
+
 
 class App extends Component {
   constructor(){
@@ -11,15 +14,29 @@ class App extends Component {
       friends: []
     };
   }
-  // componentDidMount() {
-  //   axios.get('')
-  // }
+  componentDidMount() {
+    axios.get('https://api.github.com/users/damonbogich')
+    .then(res => {
+      this.setState({myData: res.data})
+    })
+    .catch(err => {
+      console.log(err)
+    }) 
+    axios.get('https://api.github.com/users/damonbogich/followers')
+    .then(res => {
+
+      this.setState({friends: res.data})
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
   render() {
     return (
       <div className="App">
-        <h1>yo</h1>
-        <UserCard/>
+        <UserCard data={this.state.myData}/>
+        <FollowerCards data={this.state.friends} />
       </div>
     )
   }
